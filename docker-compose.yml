@@ -1,0 +1,202 @@
+---
+version: "3.9"
+
+services:
+
+    # MongoDB cluster routers: mongos
+    mongos1:
+        image: mongo
+        container_name: msc-mongos1
+        hostname: msc-mongos1
+        networks:
+            net:
+                ipv4_address: "172.31.14.1"
+        ports:
+            - 27101:27017
+        volumes:
+            - ./scripts:/scripts
+        restart: always
+        command: mongos --port 27017 --configdb $CSRS/msc-configsvr1:27017,msc-configsvr2:27017,msc-configsvr3:27017 --bind_ip_all
+            
+    
+    mongos2:
+        image: mongo
+        container_name: msc-mongos2
+        hostname: msc-mongos2
+        networks:
+            net:
+                ipv4_address: "172.31.14.2"
+        ports:
+            - 27102:27017
+        volumes:
+            - ./scripts:/scripts
+        restart: always
+        command: mongos --port 27017 --configdb $CSRS/msc-configsvr1:27017,msc-configsvr2:27017,msc-configsvr3:27017 --bind_ip_all
+
+    # MongoDB cluster config servers: configsvr
+    configsvr1:
+        image: mongo
+        container_name: msc-configsvr1
+        hostname: msc-configsvr1
+        networks:
+            net:
+                ipv4_address: "172.31.14.3"
+        ports:
+            - 27201:27017
+        volumes:
+            - ./scripts:/scripts
+        restart: always
+        command: mongod --port 27017 --configsvr --replSet $CSRS
+
+    configsvr2:
+        image: mongo
+        container_name: msc-configsvr2
+        hostname: msc-configsvr2
+        networks:
+            net:
+                ipv4_address: "172.31.14.4"
+        ports:
+            - 27202:27017
+        restart: always
+        command: mongod --port 27017 --configsvr --replSet $CSRS
+
+    configsvr3:
+        image: mongo
+        container_name: msc-configsvr3
+        hostname: msc-configsvr3
+        networks:
+            net:
+                ipv4_address: "172.31.14.5"
+        ports:
+            - 27203:27017
+        restart: always
+        command: mongod --port 27017 --configsvr --replSet $CSRS
+
+    # MongoDB cluster shards: shard
+    # SHARD A
+    sharda1:
+        image: mongo
+        container_name: msc-sharda1
+        hostname: msc-sharda1
+        networks:
+            net:
+                ipv4_address: "172.31.14.6"
+        ports:
+            - 27301:27017
+        volumes:
+            - ./scripts:/scripts
+        restart: always
+        command: mongod --port 27017 --shardsvr --replSet $SARS
+            
+    
+    sharda2:
+        image: mongo
+        container_name: msc-sharda2
+        hostname: msc-sharda2
+        networks:
+            net:
+                ipv4_address: "172.31.14.7"
+        ports:
+            - 27302:27017
+        restart: always
+        command: mongod --port 27017 --shardsvr --replSet $SARS
+    
+    sharda3:
+        image: mongo
+        container_name: msc-sharda3
+        hostname: msc-sharda3
+        networks:
+            net:
+                ipv4_address: "172.31.14.8"
+        ports:
+            - 27303:27017
+        restart: always
+        command: mongod --port 27017 --shardsvr --replSet $SARS
+    
+    # SHARD B
+    shardb1:
+        image: mongo
+        container_name: msc-shardb1
+        hostname: msc-shardb1
+        networks:
+            net:
+                ipv4_address: "172.31.14.9"
+        ports:
+            - 27304:27017
+        volumes:
+            - ./scripts:/scripts
+        restart: always
+        command: mongod --port 27017 --shardsvr --replSet $SBRS
+            
+    
+    shardb2:
+        image: mongo
+        container_name: msc-shardb2
+        hostname: msc-shardb2
+        networks:
+            net:
+                ipv4_address: "172.31.14.10"
+        ports:
+            - 27305:27017
+        restart: always
+        command: mongod --port 27017 --shardsvr --replSet $SBRS
+
+    shardb3:
+        image: mongo
+        container_name: msc-shardb3
+        hostname: msc-shardb3
+        networks:
+            net:
+                ipv4_address: "172.31.14.11"
+        ports:
+            - 27306:27017
+        restart: always
+        command: mongod --port 27017 --shardsvr --replSet $SBRS
+
+    # SHARD C
+    shardc1:
+        image: mongo
+        container_name: msc-shardc1
+        hostname: msc-shardc1
+        networks:
+            net:
+                ipv4_address: "172.31.14.12"
+        ports:
+            - 27307:27017
+        volumes:
+            - ./scripts:/scripts
+        restart: always
+        command: mongod --port 27017 --shardsvr --replSet $SCRS
+            
+    
+    shardc2:
+        image: mongo
+        container_name: msc-shardc2
+        hostname: msc-shardc2
+        networks:
+            net:
+                ipv4_address: "172.31.14.13"
+        ports:
+            - 27308:27017
+        restart: always
+        command: mongod --port 27017 --shardsvr --replSet $SCRS
+
+    shardc3:
+        image: mongo
+        container_name: msc-shardc3
+        hostname: msc-shardc3
+        networks:
+            net:
+                ipv4_address: "172.31.14.14"
+        ports:
+            - 27309:27017
+        restart: always
+        command: mongod --port 27017 --shardsvr --replSet $SCRS
+
+networks:
+    net:
+        ipam:
+            driver: default
+            config:
+                - subnet: "172.31.14.0/24"
+                  gateway: "172.31.14.254"
