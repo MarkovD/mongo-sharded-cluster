@@ -3,11 +3,23 @@ version: "3.9"
 
 services:
 
+    # MongoDB cluster gui: mongui
+    mongui:
+        image: mongo-express
+        restart: always
+        networks:
+            net:
+                ipv4_address: "172.31.14.250"
+        ports:
+            - 8081:8081
+        environment: 
+            ME_CONFIG_MONGODB_SERVER: mongos1
+
     # MongoDB cluster routers: mongos
     mongos1:
         image: mongo
-        container_name: msc-mongos1
-        hostname: msc-mongos1
+        container_name: mongos1
+        hostname: mongos1
         networks:
             net:
                 ipv4_address: "172.31.14.1"
@@ -16,13 +28,13 @@ services:
         volumes:
             - ./scripts:/scripts
         restart: always
-        command: mongos --port 27017 --configdb $CSRS/msc-configsvr1:27017,msc-configsvr2:27017,msc-configsvr3:27017 --bind_ip_all
+        command: mongos --port 27017 --configdb $CSRS/configsvr1:27017,configsvr2:27017,configsvr3:27017 --bind_ip_all
             
     
     mongos2:
         image: mongo
-        container_name: msc-mongos2
-        hostname: msc-mongos2
+        container_name: mongos2
+        hostname: mongos2
         networks:
             net:
                 ipv4_address: "172.31.14.2"
@@ -31,13 +43,13 @@ services:
         volumes:
             - ./scripts:/scripts
         restart: always
-        command: mongos --port 27017 --configdb $CSRS/msc-configsvr1:27017,msc-configsvr2:27017,msc-configsvr3:27017 --bind_ip_all
+        command: mongos --port 27017 --configdb $CSRS/configsvr1:27017,configsvr2:27017,configsvr3:27017 --bind_ip_all
 
     # MongoDB cluster config servers: configsvr
     configsvr1:
         image: mongo
-        container_name: msc-configsvr1
-        hostname: msc-configsvr1
+        container_name: configsvr1
+        hostname: configsvr1
         networks:
             net:
                 ipv4_address: "172.31.14.3"
@@ -50,8 +62,8 @@ services:
 
     configsvr2:
         image: mongo
-        container_name: msc-configsvr2
-        hostname: msc-configsvr2
+        container_name: configsvr2
+        hostname: configsvr2
         networks:
             net:
                 ipv4_address: "172.31.14.4"
@@ -62,8 +74,8 @@ services:
 
     configsvr3:
         image: mongo
-        container_name: msc-configsvr3
-        hostname: msc-configsvr3
+        container_name: configsvr3
+        hostname: configsvr3
         networks:
             net:
                 ipv4_address: "172.31.14.5"
@@ -76,8 +88,8 @@ services:
     # SHARD A
     sharda1:
         image: mongo
-        container_name: msc-sharda1
-        hostname: msc-sharda1
+        container_name: sharda1
+        hostname: sharda1
         networks:
             net:
                 ipv4_address: "172.31.14.6"
@@ -91,8 +103,8 @@ services:
     
     sharda2:
         image: mongo
-        container_name: msc-sharda2
-        hostname: msc-sharda2
+        container_name: sharda2
+        hostname: sharda2
         networks:
             net:
                 ipv4_address: "172.31.14.7"
@@ -103,8 +115,8 @@ services:
     
     sharda3:
         image: mongo
-        container_name: msc-sharda3
-        hostname: msc-sharda3
+        container_name: sharda3
+        hostname: sharda3
         networks:
             net:
                 ipv4_address: "172.31.14.8"
@@ -116,8 +128,8 @@ services:
     # SHARD B
     shardb1:
         image: mongo
-        container_name: msc-shardb1
-        hostname: msc-shardb1
+        container_name: shardb1
+        hostname: shardb1
         networks:
             net:
                 ipv4_address: "172.31.14.9"
@@ -131,8 +143,8 @@ services:
     
     shardb2:
         image: mongo
-        container_name: msc-shardb2
-        hostname: msc-shardb2
+        container_name: shardb2
+        hostname: shardb2
         networks:
             net:
                 ipv4_address: "172.31.14.10"
@@ -143,8 +155,8 @@ services:
 
     shardb3:
         image: mongo
-        container_name: msc-shardb3
-        hostname: msc-shardb3
+        container_name: shardb3
+        hostname: shardb3
         networks:
             net:
                 ipv4_address: "172.31.14.11"
@@ -156,8 +168,8 @@ services:
     # SHARD C
     shardc1:
         image: mongo
-        container_name: msc-shardc1
-        hostname: msc-shardc1
+        container_name: shardc1
+        hostname: shardc1
         networks:
             net:
                 ipv4_address: "172.31.14.12"
@@ -171,8 +183,8 @@ services:
     
     shardc2:
         image: mongo
-        container_name: msc-shardc2
-        hostname: msc-shardc2
+        container_name: shardc2
+        hostname: shardc2
         networks:
             net:
                 ipv4_address: "172.31.14.13"
@@ -183,8 +195,8 @@ services:
 
     shardc3:
         image: mongo
-        container_name: msc-shardc3
-        hostname: msc-shardc3
+        container_name: shardc3
+        hostname: shardc3
         networks:
             net:
                 ipv4_address: "172.31.14.14"

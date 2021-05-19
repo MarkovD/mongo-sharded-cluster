@@ -1,5 +1,8 @@
 #!/bin/bash -e
 
+# add static DNS entry to MongoDB Cluster
+#echo "172.31.14.1 mongodb-cluster" | sudo tee -a /etc/hosts
+
 # init config server replica set
 docker-compose exec configsvr1 sh -c "mongo < /scripts/init-csrs.js"
 
