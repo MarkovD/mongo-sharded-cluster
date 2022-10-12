@@ -17,27 +17,26 @@ services:
 
     # MongoDB cluster routers: mongos
     mongos1:
-        image: mongo
+        image: mongo:6.0.2
         container_name: mongos1
         hostname: mongos1
         networks:
             net:
-                ipv4_address: "172.31.14.1"
+                ipv4_address: "172.31.14.11"
         ports:
             - 27101:27017
         volumes:
             - ./scripts:/scripts
         restart: always
         command: mongos --port 27017 --configdb $CSRS/configsvr1:27017,configsvr2:27017,configsvr3:27017 --bind_ip_all
-            
     
     mongos2:
-        image: mongo
+        image: mongo:6.0.2
         container_name: mongos2
         hostname: mongos2
         networks:
             net:
-                ipv4_address: "172.31.14.2"
+                ipv4_address: "172.31.14.12"
         ports:
             - 27102:27017
         volumes:
@@ -47,12 +46,12 @@ services:
 
     # MongoDB cluster config servers: configsvr
     configsvr1:
-        image: mongo
+        image: mongo:6.0.2
         container_name: configsvr1
         hostname: configsvr1
         networks:
             net:
-                ipv4_address: "172.31.14.3"
+                ipv4_address: "172.31.14.13"
         ports:
             - 27201:27017
         volumes:
@@ -61,24 +60,24 @@ services:
         command: mongod --port 27017 --configsvr --replSet $CSRS
 
     configsvr2:
-        image: mongo
+        image: mongo:6.0.2
         container_name: configsvr2
         hostname: configsvr2
         networks:
             net:
-                ipv4_address: "172.31.14.4"
+                ipv4_address: "172.31.14.14"
         ports:
             - 27202:27017
         restart: always
         command: mongod --port 27017 --configsvr --replSet $CSRS
 
     configsvr3:
-        image: mongo
+        image: mongo:6.0.2
         container_name: configsvr3
         hostname: configsvr3
         networks:
             net:
-                ipv4_address: "172.31.14.5"
+                ipv4_address: "172.31.14.15"
         ports:
             - 27203:27017
         restart: always
@@ -87,79 +86,77 @@ services:
     # MongoDB cluster shards: shard
     # SHARD A
     sharda1:
-        image: mongo
+        image: mongo:6.0.2
         container_name: sharda1
         hostname: sharda1
         networks:
             net:
-                ipv4_address: "172.31.14.6"
+                ipv4_address: "172.31.14.16"
         ports:
             - 27301:27017
         volumes:
             - ./scripts:/scripts
         restart: always
-        command: mongod --port 27017 --shardsvr --replSet $SARS
-            
+        command: mongod --port 27017 --shardsvr --replSet $SARS    
     
     sharda2:
-        image: mongo
+        image: mongo:6.0.2
         container_name: sharda2
         hostname: sharda2
         networks:
             net:
-                ipv4_address: "172.31.14.7"
+                ipv4_address: "172.31.14.17"
         ports:
             - 27302:27017
         restart: always
         command: mongod --port 27017 --shardsvr --replSet $SARS
-    
+
     sharda3:
-        image: mongo
+        image: mongo:6.0.2
         container_name: sharda3
         hostname: sharda3
         networks:
             net:
-                ipv4_address: "172.31.14.8"
+                ipv4_address: "172.31.14.18"
         ports:
             - 27303:27017
         restart: always
         command: mongod --port 27017 --shardsvr --replSet $SARS
-    
+
     # SHARD B
     shardb1:
-        image: mongo
+        image: mongo:6.0.2
         container_name: shardb1
         hostname: shardb1
         networks:
             net:
-                ipv4_address: "172.31.14.9"
+                ipv4_address: "172.31.14.19"
         ports:
             - 27304:27017
         volumes:
             - ./scripts:/scripts
         restart: always
-        command: mongod --port 27017 --shardsvr --replSet $SBRS
-            
+        command: mongod --port 27017 --shardsvr --replSet $SBRS    
     
     shardb2:
-        image: mongo
+        image: mongo:6.0.2
         container_name: shardb2
         hostname: shardb2
         networks:
             net:
-                ipv4_address: "172.31.14.10"
+                ipv4_address: "172.31.14.20"
         ports:
             - 27305:27017
         restart: always
         command: mongod --port 27017 --shardsvr --replSet $SBRS
 
     shardb3:
-        image: mongo
+        image: mongo:6.0.2
         container_name: shardb3
         hostname: shardb3
         networks:
             net:
-                ipv4_address: "172.31.14.11"
+                ipv4_address: "172.31.14.21"
         ports:
             - 27306:27017
         restart: always
@@ -167,48 +164,46 @@ services:
 
     # SHARD C
     shardc1:
-        image: mongo
+        image: mongo:6.0.2
         container_name: shardc1
         hostname: shardc1
         networks:
             net:
-                ipv4_address: "172.31.14.12"
+                ipv4_address: "172.31.14.22"
         ports:
             - 27307:27017
         volumes:
             - ./scripts:/scripts
         restart: always
-        command: mongod --port 27017 --shardsvr --replSet $SCRS
-            
+        command: mongod --port 27017 --shardsvr --replSet $SCRS    
     
     shardc2:
-        image: mongo
+        image: mongo:6.0.2
         container_name: shardc2
         hostname: shardc2
         networks:
             net:
-                ipv4_address: "172.31.14.13"
+                ipv4_address: "172.31.14.23"
         ports:
             - 27308:27017
         restart: always
         command: mongod --port 27017 --shardsvr --replSet $SCRS
 
     shardc3:
-        image: mongo
+        image: mongo:6.0.2
         container_name: shardc3
         hostname: shardc3
         networks:
             net:
-                ipv4_address: "172.31.14.14"
+                ipv4_address: "172.31.14.24"
         ports:
             - 27309:27017
         restart: always
         command: mongod --port 27017 --shardsvr --replSet $SCRS
-
+        
 networks:
     net:
         ipam:
             driver: default
             config:
                 - subnet: "172.31.14.0/24"
-                  gateway: "172.31.14.254"
